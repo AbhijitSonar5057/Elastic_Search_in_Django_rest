@@ -76,52 +76,52 @@ class TestQuery(DocumentViewSet):
         li=[]
 
         #multimatch
-        query = 'Airpods'
-        q = Q(
-            'multi_match',
-            query=query,
-            fields=[
-                'title'
-            ])
-        search = NewsDocument.search().query(q)
-        response = search.execute()
-        # print all the hits
-        for hit in search:
-            print("========>>>>>>>>",hit.title)
-            Documents = { "title" :hit.title }          
-            li.append(Documents)
-
-        #bool
-        # query = 'Apple'
+        # query = 'Airpods'
         # q = Q(
-        #     'bool',
-        # must=[
-        #     Q('match', title='tesla'),
-        # ],
-        # must_not=[
-        #     Q('match', title='ruby'),
-        #     Q('match', content='javascript'),
-        # ],
-        # should=[
-        #     Q('match', title=query),
-        #     Q('match', content=query),
-        # ],
-        # minimum_should_match=1)
+        #     'multi_match',
+        #     query=query,
+        #     fields=[
+        #         'title'
+        #     ])
         # search = NewsDocument.search().query(q)
         # response = search.execute()
         # # print all the hits
         # for hit in search:
+        #     print("========>>>>>>>>",hit.title)
         #     Documents = { "title" :hit.title }          
         #     li.append(Documents)
+
+        #bool
+        query = 'Apple'
+        q = Q(
+            'bool',
+        must=[
+            Q('match', title='tesla'),
+        ],
+        must_not=[
+            Q('match', title='ruby'),
+            Q('match', content='javascript'),
+        ],
+        should=[
+            Q('match', title=query),
+            Q('match', content=query),
+        ],
+        minimum_should_match=1)
+        search = NewsDocument.search().query(q)
+        response = search.execute()
+        # print all the hits
+        for hit in search:
+            Documents = { "title" :hit.title }          
+            li.append(Documents)
 
         return Response(li)
     
 
-# class SearchCategories(DocumentViewSet):
-#     serializer_class = NewsDocumentSerializer
-#     document_class = NewsDocument
-#     try:
-#         def list(self, query):
+class SearchCategories(DocumentViewSet):
+    serializer_class = NewsDocumentSerializer
+    document_class = NewsDocument
+    try:
+        def list(self, query):
             # q = Q(
             # 'multi_match', query=query,
             # fields=[
@@ -154,14 +154,14 @@ class TestQuery(DocumentViewSet):
 
 
                 
-    #         search = NewsDocument.search().query(q)
-    #         response = search.execute()
-    #         li=[]
-    #         # print all the hits
-    #         for hit in response:
-    #             Documents = { "title" :hit.title }          
-    #             li.append(Documents)
-    #         return Response(li)
+            search = NewsDocument.search().query(q)
+            response = search.execute()
+            li=[]
+            # print all the hits
+            for hit in response:
+                Documents = { "title" :hit.title }          
+                li.append(Documents)
+            return Response(li)
 
-    # except Exception as e:
-    #     print(e)
+    except Exception as e:
+        print(e)
