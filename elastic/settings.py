@@ -49,6 +49,7 @@ ELASTICSEARCH_DSL = {
     },
 }
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
