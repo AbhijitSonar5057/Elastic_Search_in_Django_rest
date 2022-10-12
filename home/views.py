@@ -71,9 +71,9 @@ class PublisherDocumentView(DocumentViewSet):
 class TestQuery(DocumentViewSet):
     document = NewsDocument
     serializer_class = NewsDocumentSerializer
-    print("--------------------->>>>>>>>>>>")
 
     def list(self, request):
+        li=[]
 
         #multimatch
         # query = 'Airpods'
@@ -86,14 +86,13 @@ class TestQuery(DocumentViewSet):
         # search = NewsDocument.search().query(q)
         # response = search.execute()
         # # print all the hits
-        # li=[]
         # for hit in search:
         #     print("========>>>>>>>>",hit.title)
         #     Documents = { "title" :hit.title }          
         #     li.append(Documents)
 
         #bool
-        query = 'test2data'
+        query = 'Apple'
         q = Q(
             'bool',
         must=[
@@ -101,22 +100,21 @@ class TestQuery(DocumentViewSet):
         ],
         must_not=[
             Q('match', title='ruby'),
-            Q('match', title='javascript'),
+            Q('match', content='javascript'),
         ],
         should=[
             Q('match', title=query),
-            Q('match', description=query),
+            Q('match', content=query),
         ],
         minimum_should_match=1)
         search = NewsDocument.search().query(q)
         response = search.execute()
-        print("==============")
         # print all the hits
         for hit in search:
-            print("-----------------------------")
-            print("=================>>>>>",hit.title)
+            Documents = { "title" :hit.title }          
+            li.append(Documents)
 
-        return Response("li")
+        return Response(li)
     
 
 class SearchCategories(DocumentViewSet):
@@ -124,11 +122,46 @@ class SearchCategories(DocumentViewSet):
     document_class = NewsDocument
     try:
         def list(self, query):
-            return Q(
-                    'multi_match', query=query,
-                    fields=[
-                        'name',
-                        'description',
-                    ], fuzziness='auto')
+            # q = Q(
+            # 'multi_match', query=query,
+            # fields=[
+            #     'name',
+            #     'description',
+            # ], fuzziness='auto')
+
+
+        # query = 'Apple'
+        # q = Q(
+        #     'bool',
+        # must=[
+        #     Q('match', title='tesla'),
+        # ],
+        # must_not=[
+        #     Q('match', title='ruby'),
+        #     Q('match', content='javascript'),
+        # ],
+        # should=[
+        #     Q('match', title=query),
+        #     Q('match', content=query),
+        # ],
+        # minimum_should_match=1)
+        # search = NewsDocument.search().query(q)
+        # response = search.execute()
+        # # print all the hits
+        # for hit in search:
+        #     Documents = { "title" :hit.title }          
+        #     li.append(Documents)
+
+
+                
+            search = NewsDocument.search().query(q)
+            response = search.execute()
+            li=[]
+            # print all the hits
+            for hit in response:
+                Documents = { "title" :hit.title }          
+                li.append(Documents)
+            return Response(li)
+
     except Exception as e:
         print(e)
