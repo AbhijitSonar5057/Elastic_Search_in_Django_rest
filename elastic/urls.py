@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from home.views import *
 urlpatterns = [
-    path('/' , index),
+    path('' , index),
     path('search/' , PublisherDocumentView.as_view({'get': 'list'})),
     path('query/',TestQuery.as_view({'get': 'list'})),
     path('category/<str:query>/', SearchCategories.as_view({'get': 'list'})),
